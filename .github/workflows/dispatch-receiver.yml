@@ -33,7 +33,6 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/site
           hugo --minify
-          rm ./public/CNAME ./public/.nojekyll
           mv ./public $GITHUB_WORKSPACE/deploy/${{github.event.client_payload.prId}}
 
       - name: Custom files
