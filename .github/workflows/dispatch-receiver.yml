@@ -47,5 +47,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          folder: $GITHUB_WORKSPACE/deploy
+          folder: deploy
           force: false
