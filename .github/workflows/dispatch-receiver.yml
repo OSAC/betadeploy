@@ -4,12 +4,12 @@ on:
     types: [osac-pr-preview-build]
 
 jobs:
-  linux:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
           path: "deploy"
 
       - name: Checkout That pr
@@ -21,32 +21,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: "site"
 
-    # install Hugo
-    - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
-      with:
-        hugo-version: 'latest'
-        extended: true
+      # install Hugo
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: "latest"
+          extended: true
 
-    # build website
-    - name: Build
-      run: |
-        cd $GITHUB_WORKSPACE/site
-        hugo --minify
-        rm ./public/CNAME ./public/.nojekyll
-        mv ./public $GITHUB_WORKSPACE/deploy/${{github.event.client_payload.prId}}
+      # build website
+      - name: Build
+        run: |
+          cd $GITHUB_WORKSPACE/site
+          hugo --minify
+          rm ./public/CNAME ./public/.nojekyll
+          mv ./public $GITHUB_WORKSPACE/deploy/${{github.event.client_payload.prId}}
 
-    - name: Custom files
-      run: |
+      - name: Custom files
+        run: |
           echo "beta.osac.org.np" > $GITHUB_WORKSPACE/deploy/CNAME
           echo "" > $GITHUB_WORKSPACE/deploy/.nojekyll
           echo "" > $GITHUB_WORKSPACE/deploy/index.html
 
-    # push the generated content into the `gh-pages` branch.
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        folder: $GITHUB_WORKSPACE/deploy
-        force: false
+      # push the generated content into the `gh-pages` branch.
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: $GITHUB_WORKSPACE/deploy
+          force: false
